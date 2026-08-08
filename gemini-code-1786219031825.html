@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse | Create, Collaborate, Stream</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Toast Notification System (Pillar 2: Feedback) -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <div class="app-shell">
+
+    <!-- Header (Pillar 3 & 4: Navigation, Search, Theme Toggle) -->
+    <header class="main-header">
+      <div class="brand">
+        <span class="logo-text">Pulse</span>
+      </div>
+
+      <!-- Pillar 4: Search & Discovery -->
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search stems, games, creators..." autocomplete="off" />
+        <div id="searchResults" class="search-dropdown hidden"></div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Pillar 4: Theme Switcher -->
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme" data-tooltip="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <!-- Pillar 6: Auth Modal Trigger -->
+        <button class="icon-btn" id="authModalBtn" aria-label="Account" data-tooltip="Account">
+          <i class="fa-regular fa-user"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Scrollable Feed Area -->
+    <main class="content-scroll">
+
+      <!-- Filter Controls (Pillar 4: Filtering & Sorting) -->
+      <section class="filter-bar">
+        <button class="filter-chip active" data-genre="all">All Content</button>
+        <button class="filter-chip" data-genre="synthwave">Synthwave</button>
+        <button class="filter-chip" data-genre="hiphop">Hip Hop</button>
+        <button class="filter-chip" data-genre="gaming">Gaming Streams</button>
+      </section>
+
+      <!-- Post Card (Pillar 2, 3, 5: Actions, Feedback, Social Engagement) -->
+      <article class="feed-post" data-genre="synthwave">
+        <header class="post-header">
+          <div class="user-info">
+            <img src="https://picsum.photos/100/100?random=12" alt="Creator Profile" class="avatar-sm" />
+            <div>
+              <strong class="username">retro_wave99</strong>
+              <span class="post-tag">Collaborative Stem</span>
+            </div>
+          </div>
+          <button class="icon-btn post-options-btn"><i class="fa-solid fa-ellipsis"></i></button>
+        </header>
+
+        <div class="media-container">
+          <img src="https://picsum.photos/600/600?random=20" alt="Audio track cover" class="post-media" />
+          
+          <!-- Pillar 4: Audio Volume & Player Controls -->
+          <div class="media-overlay">
+            <button class="play-btn" id="playAudioBtn"><i class="fa-solid fa-play"></i></button>
+            <div class="volume-control">
+              <i class="fa-solid fa-volume-high"></i>
+              <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.8" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 5: Engagement Actions -->
+        <section class="post-controls">
+          <div class="left-controls">
+            <button class="icon-btn action-like" aria-label="Like"><i class="fa-regular fa-heart"></i></button>
+            <button class="icon-btn action-comment" aria-label="Comment"><i class="fa-regular fa-comment"></i></button>
+            <button class="icon-btn action-share" aria-label="Share"><i class="fa-regular fa-paper-plane"></i></button>
+          </div>
+          <!-- Pillar 6: Persistence / Bookmark -->
+          <button class="icon-btn action-bookmark" aria-label="Save"><i class="fa-regular fa-bookmark"></i></button>
+        </section>
+
+        <div class="post-details">
+          <span class="likes-count">1,842 likes</span>
+          <p class="caption"><strong>retro_wave99</strong> Added lead synth loops for Chapter 3. Open for vocals!</p>
+          
+          <!-- Pillar 1 & 5: Live Comment Input -->
+          <form class="comment-form">
+            <input type="text" placeholder="Add a comment or drop feedback..." required />
+            <button type="submit" class="text-btn">Post</button>
+          </form>
+        </div>
+      </article>
+
+    </main>
+
+    <!-- Pillar 3: Structural Bottom Dock -->
+    <nav class="bottom-dock">
+      <button class="dock-btn active" id="dockHome"><i class="fa-solid fa-house"></i></button>
+      <button class="dock-btn" id="dockStudioModal"><i class="fa-solid fa-plus"></i></button>
+      <button class="dock-btn" id="dockProfile"><i class="fa-solid fa-user"></i></button>
+    </nav>
+
+    <!-- Modal 1: Studio Creation (Pillar 1: File Uploads & Direct Audio Capture) -->
+    <div id="studioModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <button class="close-modal">&times;</button>
+        <h2>Studio Creation Hub</h2>
+        
+        <!-- Drag and Drop File Zone -->
+        <div id="dropZone" class="drop-zone">
+          <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+          <p>Drag and drop audio stems/video files here, or <span class="highlight">browse</span></p>
+          <input type="file" id="fileInput" multiple hidden />
+        </div>
+        <div id="fileList" class="file-list"></div>
+
+        <!-- Direct Capture Perms -->
+        <div class="capture-controls">
+          <h3>Direct Capture</h3>
+          <div class="capture-buttons">
+            <button id="recordAudioBtn" class="btn btn-secondary"><i class="fa-solid fa-microphone"></i> Record Mic</button>
+            <button id="captureCamBtn" class="btn btn-secondary"><i class="fa-solid fa-video"></i> Start Cam</button>
+          </div>
+          <video id="webcamPreview" autoplay muted class="webcam-preview hidden"></video>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 2: Auth & Session (Pillar 6: Authentication & State) -->
+    <div id="authModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <button class="close-modal">&times;</button>
+        <h2>Account Portal</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="userEmail">Email</label>
+            <input type="email" id="userEmail" placeholder="creator@pulse.io" required />
+          </div>
+          <div class="form-group">
+            <label for="userPassword">Password</label>
+            <input type="password" id="userPassword" required />
+          </div>
+          <!-- Selection Control -->
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="rememberMe" />
+            <label for="rememberMe">Remember login state</label>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
